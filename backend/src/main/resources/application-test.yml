@@ -1,0 +1,8 @@
+external:
+  country-service:
+    base-url: http://localhost:9999
+    fail-open: true
+spring:
+  jpa:
+    hibernate:
+      ddl-auto: create-drop

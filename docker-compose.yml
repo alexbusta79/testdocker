@@ -1,0 +1,33 @@
+services:
+
+  country-service:
+    image: wiremock/wiremock:3.9.1
+    container_name: country-service
+    ports:
+      - "8088:8080"
+    volumes:
+      - ./wiremock:/home/wiremock
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: supplier-backend
+    ports:
+      - "8080:8080"
+    environment:
+      EXTERNAL_COUNTRY_SERVICE_BASE_URL: http://country-service:8080
+    depends_on:
+      - country-service
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_BASE_URL: http://localhost:8080
+    container_name: supplier-frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
